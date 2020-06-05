@@ -7,8 +7,6 @@ window.addEventListener('DOMContentLoaded', () => {
   let startID;
   createElements();
 
-
-
   function createElements() {
     for (let i = 0; i < width * width; i++) {
       var el = document.createElement('div');
@@ -19,27 +17,10 @@ window.addEventListener('DOMContentLoaded', () => {
       grid.appendChild(el)
       squares.push(el)
     }
-  
-
-    console.log(squares)
   }
-
-
-  squares.forEach(events => {
-    document.getElementById(events.id).addEventListener('mousedown', mousedown);
-  })
-
 
   squares.forEach(events => {
     document.getElementById(events.id).addEventListener('dragstart', dragstart)
-  })
-
-  squares.forEach(events => {
-    document.getElementById(events.id).addEventListener('dragleave', dragleave)
-  })
-
-  squares.forEach(events => {
-    document.getElementById(events.id).addEventListener('dragend', dragend)
   })
 
   squares.forEach(events => {
@@ -50,16 +31,11 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById(events.id).addEventListener('dragover', dragover)
   })
 
-  function dragend() {
-    console.log(this.id, 'dragend')
-  }
-
   function dragdrop(e) {
     e.preventDefault();
     const dropColor = squares[this.id].style.backgroundColor;
     const startedID = parseInt(startID)
     let validMoves = [startedID - 1, startedID + 1, startedID + width, startedID - width];
-
 
     let isDroppedValid = validMoves.includes(parseInt(this.id))
     if (isDroppedValid) {
@@ -68,70 +44,56 @@ window.addEventListener('DOMContentLoaded', () => {
     } else {
       console.log('errr')
     }
-
-
   }
 
   function dragover(e) {
     e.preventDefault();
-
-  }
-
-  function dragleave() {
-    console.log(this.id, 'dragover')
-
   }
 
   function dragstart() {
-    console.log(this.id, 'dragstart')
     startColor = squares[this.id].style.backgroundColor;
     startID = this.id;
-
-  }
-
-
-  function mousedown() {
-    console.log(this.id, 'downd')
-
   }
 
   function checkRowThree() {
     for (i = 0; i < 61; i++) {
       let rowOfTree = [i, i + 1, i + 2];
       let decicatedColor = squares[i].style.backgroundColor;
-      const isBlank = squares[i].style.backgroundColor === 'white';
 
-      if (rowOfTree.every(index => squares[index].style.backgroundColor === decicatedColor  ))  {
+      if (rowOfTree.every(index => squares[index].style.backgroundColor === decicatedColor)) {
         rowOfTree.forEach(index => {
           squares[index].style.backgroundColor = 'white';
         })
-       }
+      }
     }
   }
 
-  function checkRowDown() {
-    for (i = 0; i < 61; i++) {
-      let rowOfTree = [i, i + 8, i + 16];
+  function checkColumnThree() {
+    for (i = 0; i < 41; i++) {
+      let columnOfTree = [i, i + width, i + width * 2];
       let decicatedColor = squares[i].style.backgroundColor;
-      const isBlank = squares[i].style.backgroundColor === 'white';
 
-      if (rowOfTree.every(index => squares[index].style.backgroundColor === decicatedColor  ))  {
-        rowOfTree.forEach(index => {
+      if (columnOfTree.every(index => squares[index].style.backgroundColor === decicatedColor)) {
+        columnOfTree.forEach(index => {
           squares[index].style.backgroundColor = 'white';
         })
-       }
+      }
     }
   }
 
-  
-  window.setInterval( () => {
-    checkRowThree()
-  },200)
+  function whiteMoveUp() {
+    for( i = 0; i < 55 ; i++) {
+      if(squares[i + width].style.backgroundColor === 'white' ) {
+          squares[i + width].style.backgroundColor = squares[i].style.backgroundColor;
+          squares[i].style.backgroundColor = 'white'
+      }
+    }
+  }
 
-  window.setInterval( () => {
-    checkRowDown()
-  },200)
-
-
+  window.setInterval(() => {
+    whiteMoveUp();
+    checkRowThree();
+    checkColumnThree();
+  }, 200)
 
 });
